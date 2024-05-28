@@ -17,7 +17,7 @@ struct Request {
 /// There is no restriction on what it can be. The runtime requires responses
 /// to be serialized into json. The runtime pays no attention
 /// to the contents of the response payload.
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 struct Response {
     req_id: String,
     msg: String,
@@ -43,7 +43,8 @@ pub(crate) async fn my_handler(event: LambdaEvent<Request>) -> Result<Response, 
         req_id: event.context.request_id,
         msg: format!("Hi {}, Command {} executed.", name, command),
     };
-
+    // log the response
+    tracing::info!("Response: {:?}", resp);
     // return `Response` (it will be serialized to JSON automatically by the runtime)
     Ok(resp)
 }
